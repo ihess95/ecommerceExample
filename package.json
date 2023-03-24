@@ -15,7 +15,8 @@
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "tailwind-scrollbar-hide": "^1.1.7"
+    "tailwind-scrollbar-hide": "^1.1.7",
+    "use-local-storage-state": "^18.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",

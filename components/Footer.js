@@ -7,7 +7,6 @@ export default function Footer() {
   const router = useRouter();
   const path = router.pathname;
   const { selectedProducts } = useContext(ProductsContext);
-  console.log(selectedProducts.length);
   return (
     <footer className="sticky bottom-0 bg-white p-5 w-full flex border-t border-gray-300 justify-center space-x-12 text-gray-500">
       <Link

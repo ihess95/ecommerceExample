@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Product from "../components/Product";
 import Layout from "../components/Layout";
 import { initMongoose } from "../lib/mongoose";
@@ -31,7 +31,7 @@ export default function Home({ products }) {
                   {products
                     .filter((p) => p.category === categoryName)
                     .map((productInfo) => (
-                      <div className="px-5 snap-start" key={productInfo.id}>
+                      <div key={productInfo._id} className="px-5 snap-start">
                         <Product {...productInfo} />
                       </div>
                     ))}

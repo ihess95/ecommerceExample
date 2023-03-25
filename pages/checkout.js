@@ -6,6 +6,17 @@ export default function CheckoutPage() {
   const { selectedProducts, setSelectedProducts } = useContext(ProductsContext);
   const [productsInfos, setProductsInfos] = useState([]);
 
+  // This console log is showing that when the page is first loaded, productsInfos.length is 0
+  // Which is what it should be when cart is 0. And the No items in cart message displays for a second
+  // Then the productsInfos.length updates to total number of products in db
+  // TODO: fix that
+  // It is my understanding that useEffect() automatically updates any time there is changes
+  // This may be the cause, but I think [selectedProducts] at the end is supposed to fix that
+  // Why isn't it?
+  // Is it because the array is changing, which would cause the function to re-execute?
+  // How do I stop that?
+  console.log(productsInfos.length);
+
   useEffect(() => {
     const uniqIds = [...new Set(selectedProducts)];
     fetch("/api/products?ids=" + uniqIds.join(","))
@@ -17,7 +28,14 @@ export default function CheckoutPage() {
     setSelectedProducts((prev) => [...prev, id]);
   }
 
-  function lessOfThisProduct(id) {}
+  function lessOfThisProduct(id) {
+    const pos = selectedProducts.indexOf(id);
+    if (pos !== -1) {
+      setSelectedProducts((prev) => {
+        return prev.filter((value, index) => index !== pos);
+      });
+    }
+  }
 
   return (
     <Layout>
@@ -41,7 +59,10 @@ export default function CheckoutPage() {
                 <div className="flex">
                   <div className="grow">${productInfo.price}</div>
                   <div>
-                    <button className="border border-emerald-500 px-2 rounded-lg text-emerald-500">
+                    <button
+                      onClick={() => lessOfThisProduct(productInfo._id)}
+                      className="border border-emerald-500 px-2 rounded-lg text-emerald-500"
+                    >
                       -
                     </button>
                     <span className="px-2">

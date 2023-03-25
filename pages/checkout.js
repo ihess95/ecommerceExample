@@ -15,7 +15,10 @@ export default function CheckoutPage() {
   // Why isn't it?
   // Is it because the array is changing, which would cause the function to re-execute?
   // How do I stop that?
-  console.log(productsInfos.length);
+  // Upon testing, setSelected products is preventing an infinite loop. but not doing what I think it needs to
+  // Maybe thats not the issue.
+  // Changed  ProductsInfos in first line of Layout to selectedProducts and now the message displays
+  // Now for a split second a 0 is displayed on load
 
   useEffect(() => {
     const uniqIds = [...new Set(selectedProducts)];
@@ -39,7 +42,8 @@ export default function CheckoutPage() {
 
   return (
     <Layout>
-      {!productsInfos.length && <div>No Products in your shopping cart</div>}
+      {/* Change made on line below */}
+      {!selectedProducts.length && <div>No Products in your shopping cart</div>}
       {productsInfos.length &&
         productsInfos.map((productInfo) => {
           const amount = selectedProducts.filter(
@@ -86,8 +90,3 @@ export default function CheckoutPage() {
     </Layout>
   );
 }
-
-// export default function CheckoutPage() {
-//   const { selectedProducts } = useContext(ProductsContext);
-//   return <Layout>{selectedProducts.join(",")}</Layout>;
-// }

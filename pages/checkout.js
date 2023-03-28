@@ -5,6 +5,10 @@ import { ProductsContext } from "../components/ProductsContext";
 export default function CheckoutPage() {
   const { selectedProducts, setSelectedProducts } = useContext(ProductsContext);
   const [productsInfos, setProductsInfos] = useState([]);
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   // This console log is showing that when the page is first loaded, productsInfos.length is 0
   // Which is what it should be when cart is 0. And the No items in cart message displays for a second
@@ -40,10 +44,21 @@ export default function CheckoutPage() {
     }
   }
 
+  const deliveryPrice = 5;
+  let subtotal = 0;
+  if (selectedProducts?.length) {
+    for (let id of selectedProducts) {
+      const price = productsInfos.find((p) => p._id === id)?.price || 0;
+      subtotal += Math.round((price * 100) / 100);
+    }
+  }
+
+  let total = subtotal + deliveryPrice;
+
   return (
     <Layout>
-      {/* Change made on line below */}
-      {!selectedProducts.length && <div>No Products in your shopping cart</div>}
+      {/* Change made on line below selectedProduct*/}
+      {!productsInfos.length && <div>No Products in your shopping cart</div>}
       {productsInfos.length &&
         productsInfos.map((productInfo) => {
           const amount = selectedProducts.filter(
@@ -87,6 +102,69 @@ export default function CheckoutPage() {
             </div>
           );
         })}
+      <form action="/api/checkout" method="POST">
+        <div className="mt-4">
+          <input
+            name="address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="bg-gray-200 w-full rounded-lg px-4 py-2 mb-2"
+            type="text"
+            placeholder="Street address, number"
+          />
+          <input
+            name="city"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="bg-gray-200 w-full rounded-lg px-4 py-2 mb-2"
+            type="text"
+            placeholder="City and postal code"
+          />
+          <input
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="bg-gray-200 w-full rounded-lg px-4 py-2 mb-2"
+            type="text"
+            placeholder="Your name"
+          />
+          <input
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="bg-gray-200 w-full rounded-lg px-4 py-2 mb-2"
+            type="text"
+            placeholder="Email address"
+          />
+        </div>
+        <div className="mt-4">
+          <div className="flex my-3 font-bold">
+            <h3 className="grow font-bold text-gray-500">Subtotal:</h3>
+            <h3>{subtotal.toFixed(2)}</h3>
+          </div>
+          <div className="flex my-3 font-bold">
+            <h3 className="grow font-bold text-gray-500">Delivery:</h3>
+            <h3>{deliveryPrice.toFixed(2)}</h3>
+          </div>
+          <div className="flex font-bold my-3 border-t-2 pt-3 border-dashed border-emerald-500">
+            <h3 className="grow font-bold text-gray-500">Total:</h3>
+            <h3>{total.toFixed(2)}</h3>
+          </div>
+        </div>
+
+        <input
+          type="hidden"
+          name="products"
+          value={selectedProducts.join(",")}
+        />
+
+        <button
+          type="submit"
+          className="bg-emerald-500 text-white w-full px-5 py-2 rounded-xl font-bold my-4 shadow-emerald-300 shadow-xl"
+        >
+          Pay ${total.toFixed(2)}
+        </button>
+      </form>
     </Layout>
   );
 }
